@@ -1,9 +1,21 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# db/seeds.rb
+#初期初期ストレッチデータ
+stretches = [
+  {
+    name: '肩回し',
+    description: '肩の筋肉をリラックスさせるストレッチです。',
+    target_area: 'shoulder',
+    difficulty: 1
+  },
+  {
+    name: '首のストレッチ',
+    description: '首の緊張を和らげるストレッチです。',
+    target_area: 'neck',
+    difficulty: 1
+  },
+  # 他のストレッチも追加
+]
+
+stretches.each do |stretch|
+  Stretch.create!(stretch)
+end
