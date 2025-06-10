@@ -28,8 +28,9 @@ const Register = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      await register(values);
-      navigate('/login', { state: { message: '登録が完了しました。ログインしてください。' } });
+      const data = await register(values);
+      localStorage.setItem('token', data.token);
+      navigate('/');
     } catch (err) {
       setError('登録に失敗しました。入力内容を確認してください。');
     } finally {

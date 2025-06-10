@@ -28,9 +28,9 @@ export const AuthProvider = ({ children }) => {
 
   const loginUser = async (email, password) => {
     try {
-      const user = await login(email, password);
-      setCurrentUser(user);
-      return user;
+      const response = await login(email, password);
+      setCurrentUser(response.user);  // ここを response.user に修正
+      return response.user;
     } catch (error) {
       throw error;
     }
@@ -38,9 +38,9 @@ export const AuthProvider = ({ children }) => {
 
   const registerUser = async (userData) => {
     try {
-      const user = await register(userData);
-      setCurrentUser(user);
-      return user;
+      const response = await register(userData);
+      setCurrentUser(response.user);
+      return response.user;
     } catch (error) {
       throw error;
     }
@@ -55,12 +55,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = (user) => {
+    setCurrentUser(user);
+  };
+
   const value = {
     currentUser,
     login: loginUser,
     register: registerUser,
     logout: logoutUser,
-    isAuthenticated: !!currentUser
+    isAuthenticated: !!currentUser,
+    updateUser
   };
 
   return (

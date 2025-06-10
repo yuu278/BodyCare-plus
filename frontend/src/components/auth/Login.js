@@ -20,6 +20,7 @@ const Login = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const data = await login(values.email, values.password);
+      localStorage.setItem('token', data.token);
       updateUser(data.user);
       navigate('/');
     } catch (err) {
