@@ -1,18 +1,21 @@
 Rails.application.routes.draw do
-  # 既存の API ルート
   namespace :api do
     namespace :v1 do
-      resources :users, only: [:show, :create, :update]
-      resources :body_assessments, only: [:index, :show, :create]
+      post 'auth/register', to: 'auth#register'
+      post 'auth/login', to: 'auth#login'
+
+      get 'me', to: 'users#show'
+
+      resources :users, only: [:show, :update]
+      resources :body_assessments
       resources :stretches, only: [:index, :show]
-      resources :user_stretches, only: [:index, :create, :update]
-      post '/login', to: 'auth#login'
-      get '/me', to: 'auth#me'
+
+      get 'user_stretches/recommended', to: 'user_stretches#recommended'
+      get 'user_stretches/completed', to: 'user_stretches#completed'
+      post 'user_stretches/mark_completed', to: 'user_stretches#mark_completed'
     end
   end
 
-  # WebSocket 用にActionCableをマウント
+  # WebSocket用のマウントポイント
   mount ActionCable.server => '/ws'
-
-  get "up" => "rails/health#show", as: :rails_health_check
 end

@@ -56,6 +56,12 @@ Rails.application.configure do
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
 
+  # ActionCable設定
+  config.action_cable.url = 'ws://localhost:3000/ws'
+  config.action_cable.allowed_request_origins = [
+    'http://localhost:8000',
+    'http://localhost:3000'
+  ]
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
