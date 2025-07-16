@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "daisyui": "^5.0.43"
+    "daisyui": "^5.0.43",
+    "formik": "^2.4.6"
   }
 }
