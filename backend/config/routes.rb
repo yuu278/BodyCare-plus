@@ -4,7 +4,7 @@ Rails.application.routes.draw do
       post 'auth/register', to: 'auth#register'
       post 'auth/login', to: 'auth#login'
 
-      get 'me', to: 'users#show'
+      get 'me', to: 'users#me'
 
       resources :users, only: [:show, :update]
       resources :body_assessments

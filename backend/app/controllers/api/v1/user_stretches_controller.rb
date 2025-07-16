@@ -1,6 +1,4 @@
 class Api::V1::UserStretchesController < ApplicationController
-end
-class Api::V1::UserStretchesController < ApplicationController
   # ユーザーに推奨されているストレッチを取得
   def recommended
     recommended_stretches = current_user.user_stretches
@@ -29,3 +27,4 @@ class Api::V1::UserStretchesController < ApplicationController
 
     render json: user_stretch
   end
+end

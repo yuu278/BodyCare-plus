@@ -1,10 +1,13 @@
 class Api::V1::BodyAssessmentsController < ApplicationController
   before_action :set_body_assessment, only: [:show, :update, :destroy]
 
-  # 現在のユーザーの全アセスメントを取得
   def index
     assessments = current_user.body_assessments.order(assessment_date: :desc)
-    render json: assessments
+
+    render json: assessments.as_json(only: [
+      :id, :shoulder_score, :neck_score, :back_score, :hip_score,
+      :knee_score, :ankle_score, :assessment_date, :created_at
+    ])
   end
 
   # 特定のアセスメントを取得
