@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { logout } from '../../services/auth';
 
 const Header = () => {
-  const { currentUser, isAuth, clearUser } = useAuth();
+  const { isAuthenticated, clearUser } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -29,7 +29,7 @@ const Header = () => {
           <li>
             <Link to="/stretches">ストレッチ</Link>
           </li>
-          {isAuth ? (
+          {isAuthenticated ? (
             <>
               <li>
                 <Link to="/profile">プロフィール</Link>
