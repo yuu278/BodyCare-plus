@@ -16,7 +16,7 @@ const Home = () => {
           </p>
           {isAuthenticated ? (
             <div className="flex flex-col md:flex-row gap-4 justify-center">
-              <Link to="/assessment" className="btn btn-primary">アセスメントを受ける</Link>
+              <Link to="/assessment" className="btn btn-primary">診断を受ける</Link>
               <Link to="/library" className="btn btn-outline">ストレッチライブラリ</Link>
             </div>
           ) : (
