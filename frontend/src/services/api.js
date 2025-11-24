@@ -3,12 +3,15 @@ import axios from 'axios';
 // APIのベースURL（環境変数対応）
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api/v1';
 
+const token = localStorage.getItem('token');
+
 // axiosインスタンスの作成
 const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json'
+    'Accept': 'application/json',
+    ...(token && { 'Authorization': `Bearer ${token}` })
   },
   withCredentials: true,
   timeout: 10000  // タイムアウトを10秒に設定
