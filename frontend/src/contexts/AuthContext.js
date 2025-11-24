@@ -14,9 +14,11 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    if (!token) {
+      setLoading(false);
+      return;
     }
+    apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
     const initAuth = async () => {
       try {
@@ -25,6 +27,7 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser(user);
       } catch (error) {
         console.error('現在のユーザー取得に失敗しました:', error);
+        await logoutUser();
       } finally {
         setLoading(false);
       }
@@ -71,11 +74,18 @@ export const AuthProvider = ({ children }) => {
     setCurrentUser(user);
   };
 
+  const clearUser = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('token');
+    delete apiClient.defaults.headers.common['Authorization'];
+  };
+
   const value = {
     currentUser,
     login: loginUser,
     register: registerUser,
     logout: logoutUser,
+    clearUser,
     isAuthenticated: !!currentUser,
     updateUser,
     loading
