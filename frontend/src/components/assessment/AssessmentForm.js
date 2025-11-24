@@ -3,23 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import apiClient from '../../services/api';
 import BodyMap from './BodyMap';
 import PainScale from './PainScale';
-import LifestyleChecks from './LifestyleChecks';
-import CommentBox from './CommentBox';
+import JobTypeChecks from './JobTypeChecks';
+import ExerciseChecks from './ExerciseChecks';
+import PostureChecks from './PostureChecks';
 
 const AssessmentForm = () => {
   // フォーム状態の管理
-  const [painAreas, setPainAreas] = useState([]);
-  const [painLevel, setPainLevel] = useState(5);
-  const [painTypes, setPainTypes] = useState([]);
-  const [selectedLifestyle, setSelectedLifestyle] = useState([]);
-  const [symptoms, setSymptoms] = useState('');
-  const [goals, setGoals] = useState('');
+  const [painArea, setPainArea] = useState('');
+  const [painTypes, setPainTypes] = useState('');
   const [duration, setDuration] = useState('');
+  const [jobTypes, setJobTypes] = useState('');
+  const [exerciseHabits, setExerciseHabits] = useState('');
+  const [postureHabits, setPostureHabits] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const navigate = useNavigate();
 
-  const totalSteps = 5;
+  const totalSteps = 6;
 
   // フォーム送信処理
   const handleSubmit = async (e) => {
@@ -29,24 +29,19 @@ const AssessmentForm = () => {
     try {
       // ユーザーが設定した痛みレベルを使用
       const assessmentData = {
-        shoulder_score: painAreas.includes('肩') ? painLevel : 0,
-        neck_score: painAreas.includes('首') ? painLevel : 0,
-        back_score: painAreas.includes('背中') ? painLevel : 0,
-        hip_score: painAreas.includes('腰') ? painLevel : 0,
-        knee_score: painAreas.includes('膝') ? painLevel : 0,
-        ankle_score: painAreas.includes('足首') ? painLevel : 0,
         // 追加のデータも送信
-        pain_areas: painAreas,
+        pain_area: painArea,
         pain_types: painTypes,
         duration: duration,
-        symptoms: symptoms,
-        goals: goals,
-        lifestyle_factors: selectedLifestyle
+        job_types: jobTypes,
+        exercise_habits: exerciseHabits,
+        posture_habits: postureHabits
       };
 
-      const response = await apiClient.post('/body_assessments', assessmentData);
+      const response = await apiClient.post('/body_assessments', {
+        body_assessment: assessmentData
+      });
       console.log('✅ POST成功:', response.data);
-      alert('アセスメント送信成功！');
       navigate('/results');
     } catch (error) {
       console.error('❌ POST失敗:', error.response?.data || error.message);
@@ -72,17 +67,18 @@ const AssessmentForm = () => {
 
   // 送信可能かチェック
   const canSubmit = () => {
-    return painAreas.length > 0 && duration !== '';
+    return painArea !== '' && duration !== '';
   };
 
   // ステップのタイトルを取得
   const getStepTitle = (step) => {
     const titles = {
       1: '痛みのある箇所',
-      2: '痛みのレベル',
-      3: '生活習慣',
-      4: '詳細情報',
-      5: '確認・送信'
+      2: '悩みの種類と期間',
+      3: '職業タイプ',
+      4: '運動習慣',
+      5: '姿勢習慣',
+      6: '確認・送信'
     };
     return titles[step];
   };
@@ -116,17 +112,19 @@ const AssessmentForm = () => {
         <div>
           <h4 className="font-medium text-gray-700 mb-2">痛みのある箇所</h4>
           <div className="flex flex-wrap gap-2">
-            {painAreas.map((area) => (
-              <span key={area} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
-                {area}
+            {painArea ? (
+              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
+                {painArea}
               </span>
-            ))}
+            ) : (
+              <span className="text-gray-500 text-sm">なし</span>
+            )}
           </div>
         </div>
 
         <div>
-          <h4 className="font-medium text-gray-700 mb-2">痛みのレベル</h4>
-          <p className="text-gray-600">{painLevel} / 10</p>
+          <h4 className="font-medium text-gray-700 mb-2">悩みの種類</h4>
+          <p className="text-gray-600">{painTypes || '未選択'}</p>
         </div>
 
         <div>
@@ -135,24 +133,24 @@ const AssessmentForm = () => {
         </div>
 
         <div>
-          <h4 className="font-medium text-gray-700 mb-2">生活習慣（{(selectedLifestyle || []).length}件選択）</h4>
+          <h4 className="font-medium text-gray-700 mb-2">職業タイプ</h4>
           <div className="text-sm text-gray-600">
-            {(selectedLifestyle || []).length > 0 ? '選択済み' : '未選択'}
+            {jobTypes ? '選択済み' : '未選択'}
           </div>
         </div>
 
         <div>
-          <h4 className="font-medium text-gray-700 mb-2">症状の詳細</h4>
-          <p className="text-gray-600 text-sm">
-            {symptoms ? `${symptoms.substring(0, 100)}...` : '未入力'}
-          </p>
+          <h4 className="font-medium text-gray-700 mb-2">運動習慣</h4>
+          <div className="text-sm text-gray-600">
+            {exerciseHabits ? '選択済み' : '未選択'}
+          </div>
         </div>
 
         <div>
-          <h4 className="font-medium text-gray-700 mb-2">改善目標</h4>
-          <p className="text-gray-600 text-sm">
-            {goals ? `${goals.substring(0, 100)}...` : '未入力'}
-          </p>
+          <h4 className="font-medium text-gray-700 mb-2">普段の姿勢</h4>
+          <div className="text-sm text-gray-600">
+            {postureHabits ? '選択済み' : '未選択'}
+          </div>
         </div>
       </div>
     </div>
@@ -168,42 +166,21 @@ const AssessmentForm = () => {
           <div>
             <h3 className="text-xl font-bold text-gray-800 mb-6">痛みのある箇所を選択してください</h3>
             <BodyMap
-              selectedAreas={painAreas}
+              selectedArea={painArea}
               onSelectArea={(bodyPart) => {
-                if (painAreas.includes(bodyPart)) {
-                  setPainAreas(painAreas.filter(area => area !== bodyPart));
-                } else {
-                  setPainAreas([...painAreas, bodyPart]);
-                }
+                setPainArea(bodyPart);
               }}
             />
-
-            <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-              <span className="text-sm font-medium text-gray-700">選択された部位: </span>
-              {painAreas.length > 0 ? (
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {painAreas.map((area) => (
-                    <span key={area} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
-                      {area}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <span className="text-gray-500 text-sm">なし</span>
-              )}
-            </div>
           </div>
         )}
 
-        {/* ステップ2: 痛みのレベル */}
+        {/* ステップ2: 悩みの種類と期間 */}
         {currentStep === 2 && (
           <div>
-            <h3 className="text-xl font-bold text-gray-800 mb-6">痛みのレベルと期間</h3>
+            <h3 className="text-xl font-bold text-gray-800 mb-6">悩みの種類と期間</h3>
             <PainScale
-              painLevel={painLevel}
-              onPainLevelChange={setPainLevel}
-              painTypes={painTypes}
-              onPainTypesChange={setPainTypes}
+              selectedPainType={painTypes}
+              onPainTypeChange={setPainTypes}
             />
             <div className="mb-6">
               <label className="block text-gray-700 text-lg font-medium mb-3">症状の期間</label>
@@ -214,43 +191,77 @@ const AssessmentForm = () => {
                 required
               >
                 <option value="">選択してください</option>
-                <option value="1日以内">1日以内</option>
-                <option value="数日">数日</option>
-                <option value="1週間程度">1週間程度</option>
-                <option value="1ヶ月程度">1ヶ月程度</option>
-                <option value="数ヶ月">数ヶ月</option>
-                <option value="1年以上">1年以上</option>
+                <option value="数日以内">数日以内</option>
+                <option value="1ヶ月未満">1ヶ月未満</option>
+                <option value="1ヶ月以上">1ヶ月以上</option>
               </select>
             </div>
           </div>
         )}
 
-        {/* ステップ3: 生活習慣 */}
+        {/* ステップ3: 職業タイプ */}
         {currentStep === 3 && (
           <div>
-            <h3 className="text-xl font-bold text-gray-800 mb-6">生活習慣について</h3>
-            <LifestyleChecks
-              selectedLifestyle={selectedLifestyle}
-              onLifestyleChange={setSelectedLifestyle}
+            <h3 className="text-xl font-bold text-gray-800 mb-6">職業タイプについて選択してください</h3>
+            <JobTypeChecks
+              selectedJobType={jobTypes}
+              onJobTypeChange={setJobTypes}
             />
           </div>
         )}
 
-        {/* ステップ4: 詳細情報 */}
+        {/* ステップ4: 運動習慣 */}
         {currentStep === 4 && (
           <div>
-            <h3 className="text-xl font-bold text-gray-800 mb-6">詳細情報</h3>
-            <CommentBox
-              symptoms={symptoms}
-              onSymptomsChange={setSymptoms}
-              goals={goals}
-              onGoalsChange={setGoals}
+            <h3 className="text-xl font-bold text-gray-800 mb-6">運動習慣について選択してください</h3>
+            <ExerciseChecks
+              selectedExerciseHabits={exerciseHabits}
+              onExerciseHabitChange={setExerciseHabits}
             />
           </div>
         )}
 
-        {/* ステップ5: 確認・送信 */}
-        {currentStep === 5 && <ConfirmationStep />}
+        {/* ステップ5: 姿勢習慣 */}
+        {currentStep === 5 && (
+          <div>
+            <h3 className="text-xl font-bold text-gray-800 mb-6">普段の姿勢について選択してください</h3>
+            <PostureChecks
+              selectedPostureHabits={postureHabits}
+              onPostureHabitChange={setPostureHabits}
+            />
+          </div>
+        )}
+
+        {/* ステップ6: 確認・送信 */}
+        {currentStep === 6 && (
+          <div>
+            <ConfirmationStep />
+
+            <div className="flex justify-between mt-8">
+              {/* 修正する（戻る）ボタン */}
+              <button
+                type="button"
+                onClick={prevStep}
+                className="px-6 py-2 rounded-lg font-medium bg-gray-200 text-gray-700 hover:bg-gray-300"
+              >
+                修正する
+              </button>
+
+              {/* 送信ボタン */}
+              <button
+                type="submit"
+                className={`px-8 py-2 rounded-lg font-medium ${
+                  !canSubmit() || isSubmitting
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-green-600 text-white hover:bg-green-700'
+                }`}
+                disabled={!canSubmit() || isSubmitting}
+              >
+                {isSubmitting ? '送信中...' : 'この内容で送信する'}
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* ナビゲーションボタン */}
         <div className="flex justify-between mt-8">
@@ -267,34 +278,28 @@ const AssessmentForm = () => {
             前へ
           </button>
 
-          {currentStep < totalSteps ? (
+          {currentStep < totalSteps && (
             <button
               type="button"
               onClick={nextStep}
               className={`px-6 py-2 rounded-lg font-medium ${
-                (currentStep === 1 && painAreas.length === 0) ||
-                (currentStep === 2 && duration === '')
+                (currentStep === 1 && !painArea) ||
+                (currentStep === 2 && (!painTypes || duration === '')) ||
+                (currentStep === 3 && !jobTypes) ||
+                (currentStep === 4 && !exerciseHabits) ||
+                (currentStep === 5 && !postureHabits)
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   : 'bg-blue-600 text-white hover:bg-blue-700'
               }`}
               disabled={
-                (currentStep === 1 && painAreas.length === 0) ||
-                (currentStep === 2 && duration === '')
+                (currentStep === 1 && !painArea) ||
+                (currentStep === 2 && (!painTypes || duration === '')) ||
+                (currentStep === 3 && !jobTypes) ||
+                (currentStep === 4 && !exerciseHabits) ||
+                (currentStep === 5 && !postureHabits)
               }
             >
               次へ
-            </button>
-          ) : (
-            <button
-              type="submit"
-              className={`px-8 py-2 rounded-lg font-medium ${
-                !canSubmit() || isSubmitting
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-green-600 text-white hover:bg-green-700'
-              }`}
-              disabled={!canSubmit() || isSubmitting}
-            >
-              {isSubmitting ? '送信中...' : 'アセスメントを送信'}
             </button>
           )}
         </div>

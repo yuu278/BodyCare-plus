@@ -7,7 +7,7 @@ const Assessment = () => {
       <div className="container mx-auto py-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            身体状態アセスメント
+            あなたの身体状態
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
             あなたの現在の身体状態や生活習慣について詳しく教えてください。
