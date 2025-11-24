@@ -7,9 +7,12 @@ class ApplicationController < ActionController::API
 
   def authenticate_user
     header = request.headers['Authorization']
-    return true unless header.present?
+    token = header&.split(' ')&.last
 
-    token = header.split(' ').last
+    if token.blank?
+      render json: { error: 'トークンが見つかりませんでした' }, status: :unauthorized and return
+    end
+
     begin
       @decoded = JsonWebToken.decode(token)
       @current_user = User.find(@decoded[:user_id])
