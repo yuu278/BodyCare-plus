@@ -10,18 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_30_163856) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_22_113406) do
   create_table "body_assessments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "assessment_date"
-    t.integer "shoulder_score"
-    t.integer "neck_score"
-    t.integer "back_score"
-    t.integer "hip_score"
-    t.integer "knee_score"
-    t.integer "ankle_score"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "pain_area"
+    t.json "pain_types"
+    t.json "duration"
+    t.json "job_types"
+    t.json "exercise_habits"
+    t.json "posture_habits"
     t.index ["user_id"], name: "index_body_assessments_on_user_id"
   end
 
@@ -31,9 +31,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_30_163856) do
     t.string "image_url"
     t.string "video_url"
     t.string "target_area"
-    t.integer "difficulty"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "muscle_info"
+    t.json "pain_type"
+    t.json "job_type"
+    t.json "exercise_habit"
+    t.json "posture_habit"
+    t.string "body_part"
+    t.json "duration"
   end
 
   create_table "user_stretches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
