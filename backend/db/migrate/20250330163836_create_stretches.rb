@@ -6,7 +6,6 @@ class CreateStretches < ActiveRecord::Migration[7.1]
       t.string :image_url
       t.string :video_url
       t.string :target_area
-      t.integer :difficulty
 
       t.timestamps
     end
