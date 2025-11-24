@@ -1,30 +1,17 @@
 class Api::V1::UserStretchesController < ApplicationController
-  # ユーザーに推奨されているストレッチを取得
+  before_action :authenticate_user
+
   def recommended
-    recommended_stretches = current_user.user_stretches
-                                        .where(recommended: true)
-                                        .includes(:stretch)
-                                        .map(&:stretch)
+    latest_assessment = current_user.body_assessments.order(created_at: :desc).first
 
-    render json: recommended_stretches
-  end
+    unless latest_assessment
+      render json: [], status: :ok and return
+    end
 
-  # ユーザーが完了したストレッチを取得
-  def completed
-    completed_stretches = current_user.user_stretches
-                                      .where.not(completed_count: [nil, 0])
-                                      .includes(:stretch)
-                                      .order(last_completed_at: :desc)
+    stretches = Stretch.flexible_matching(latest_assessment)
 
-    render json: completed_stretches.as_json(include: :stretch)
-  end
-
-  # ストレッチを完了としてマーク
-  def mark_completed
-    user_stretch = current_user.user_stretches.find_or_initialize_by(stretch_id: params[:stretch_id])
-
-    user_stretch.mark_as_completed
-
-    render json: user_stretch
+    render json: stretches.as_json(
+      only: [:id, :name, :description, :target_area, :muscle_info, :video_url]
+    )
   end
 end
