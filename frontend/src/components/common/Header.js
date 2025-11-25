@@ -2,13 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { logout } from '../../services/auth';
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const { isAuthenticated, clearUser } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     clearUser();
+    navigate("/login", { replace: true });
   };
 
   return (

@@ -3,16 +3,22 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated, currentUser } = useAuth();
+  const { isAuthenticated , loading } = useAuth();
 
-  // currentUser が null の場合でも、初期チェックが終わっていないだけかもしれない
-  if (currentUser === null) {
-    // 認証確認中のため、ローディングを返す（もしくは null）
+  // AuthContext に "loading" が無い場合は追加推奨
+  // loading = ユーザー情報を Firebase or API から読み込み中
+
+  if (loading) {
     return <div>認証確認中...</div>;
   }
 
-  // 認証済みなら表示、それ以外はログインへ
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  // 未ログインならログインページへ
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // ログイン済みなら子コンポーネントを表示
+  return children;
 };
 
 export default PrivateRoute;
