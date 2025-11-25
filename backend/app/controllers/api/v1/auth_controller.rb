@@ -1,7 +1,7 @@
 module Api
   module V1
     class AuthController < ApplicationController
-      skip_before_action :authenticate_user, only: [:login, :register]
+      skip_before_action :authenticate_user, only: [:login, :register, :guest_login]
 
       def login
         user = User.find_by(email: auth_params[:email])
@@ -33,6 +33,21 @@ module Api
             errors: user.errors.full_messages
           }, status: :unprocessable_entity
         end
+      end
+
+      def guest_login
+        # ゲストユーザーを探す or 作成
+        guest_user = User.find_or_create_by(email: 'guest@example.com') do |user|
+          user.password = 'guest_password_123'
+          user.name = 'ゲストユーザー'
+        end
+
+        token = JsonWebToken.encode(user_id: guest_user.id)
+
+        render json: {
+          token: token,
+          user: guest_user.as_json(only: [:id, :email, :name])
+        }
       end
 
       private
