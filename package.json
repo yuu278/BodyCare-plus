@@ -1,4 +1,7 @@
 {
+  "name": "bodycare-root",
+  "version": "1.0.0",
+  "private": true,
   "dependencies": {
     "daisyui": "^5.0.43",
     "formik": "^2.4.6"
