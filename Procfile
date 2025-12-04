@@ -1,1 +1,0 @@
-web: npm run build --prefix frontend && npx serve -s frontend/build
