@@ -1,24 +1,18 @@
-# README
+# Backend API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+BodyCare+ アプリのバックエンドAPIです。身体状態の診断保存や、診断に基づいたストレッチ推奨APIを提供します。
 
-Things you may want to cover:
+Rails API + MySQL + JWT認証
 
-* Ruby version
+## セットアップ
+```bash
+bundle install
+rails db:create db:migrate db:seed
+rails server -p 3001
+```
 
-* System dependencies
+## APIエンドポイント
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- `POST /api/v1/auth/login` - ログイン
+- `POST /api/v1/body_assessments` - 診断保存
+- `GET /api/v1/user_stretches/recommended` - おすすめ取得
