@@ -4,8 +4,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     origins(
       'http://localhost:8000',
       'http://localhost:3000',
-      'https://body-care-plus.vercel.app',
-      'https://body-care-plus-*.vercel.app'
+      /https:\/\/body-care-plus.*\.vercel\.app/,
     )
 
     resource '*',
