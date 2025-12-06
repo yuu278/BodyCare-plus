@@ -1,11 +1,14 @@
 import axios from 'axios';
 
-// APIのベースURL（環境変数対応）
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api/v1';
+// ✅ 環境変数名を REACT_APP_API_BASE_URL に統一
+const API_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001/api/v1';
+
+// デバッグ用
+console.log('🔧 API_URL:', API_URL);
+console.log('🔧 Environment:', process.env.NODE_ENV);
 
 const token = localStorage.getItem('token');
 
-// axiosインスタンスの作成
 const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
@@ -14,7 +17,7 @@ const apiClient = axios.create({
     ...(token && { 'Authorization': `Bearer ${token}` })
   },
   withCredentials: true,
-  timeout: 10000  // タイムアウトを10秒に設定
+  timeout: 10000
 });
 
 // リクエストインターセプター
@@ -25,14 +28,12 @@ apiClient.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    // デバッグ情報の改善
     console.log('APIリクエスト詳細:', {
       url: `${config.baseURL}${config.url}`,
       method: config.method,
       headers: config.headers,
       data: config.data
     });
-
     return config;
   },
   (error) => {
@@ -44,7 +45,7 @@ apiClient.interceptors.request.use(
   }
 );
 
-// レスポンスインターセプターの改善
+// レスポンスインターセプター
 apiClient.interceptors.response.use(
   (response) => {
     console.log('APIレスポンス成功:', {
@@ -56,7 +57,6 @@ apiClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    // エラーハンドリングの改善
     const errorDetails = {
       status: error.response?.status,
       statusText: error.response?.statusText,
@@ -67,7 +67,6 @@ apiClient.interceptors.response.use(
 
     console.error('APIエラー詳細:', errorDetails);
 
-    // エラータイプに応じた処理
     switch (error.code) {
       case 'ERR_NETWORK':
         console.error('ネットワークエラー: サーバーに接続できません');
