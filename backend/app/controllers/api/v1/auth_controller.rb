@@ -53,11 +53,13 @@ module Api
       private
 
       def auth_params
-        params.permit(:email, :password)
+        source = params[:auth] || params
+        source.permit(:email, :password)
       end
 
       def user_params
-        params.permit(
+        source = params[:user] || params
+        source.permit(
           :name,
           :email,
           :password,
