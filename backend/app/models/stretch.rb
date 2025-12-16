@@ -15,55 +15,65 @@ class Stretch < ApplicationRecord
   scope :matching, -> (assessment) {
     stretches = all
     stretches = stretches.where(body_part: assessment.pain_area) if assessment.pain_area.present?
-    stretches = stretches.where("JSON_CONTAINS(pain_type, ?)", assessment.pain_types.to_json) if assessment.pain_types.present?
-    stretches = stretches.where("JSON_CONTAINS(duration, ?)", assessment.duration.to_json) if assessment.duration.present?
-    stretches = stretches.where("JSON_CONTAINS(job_type, ?)", assessment.job_types.to_json) if assessment.job_types.present?
-    stretches = stretches.where("JSON_CONTAINS(exercise_habit, ?)", assessment.exercise_habits.to_json) if assessment.exercise_habits.present?
-    stretches = stretches.where("JSON_CONTAINS(posture_habit, ?)", assessment.posture_habits.to_json) if assessment.posture_habits.present?
+    stretches = stretches.where("pain_type @> ?", assessment.pain_types.to_json) if assessment.pain_types.present?
+    stretches = stretches.where("duration @> ?", assessment.duration.to_json) if assessment.duration.present?
+    stretches = stretches.where("job_type @> ?", assessment.job_types.to_json) if assessment.job_types.present?
+    stretches = stretches.where("exercise_habit @> ?", assessment.exercise_habits.to_json) if assessment.exercise_habits.present?
+    stretches = stretches.where("posture_habit @> ?", assessment.posture_habits.to_json) if assessment.posture_habits.present?
     stretches
   }
 
   # 柔軟性マッチング（段階的検索）
   def self.flexible_matching(assessment)
-    # body_partは常に固定（必須条件）
     base_scope = where(body_part: assessment.pain_area)
 
-    # ヘルパー: 安全に配列化して JSON にする
+    is_postgres = ActiveRecord::Base.connection.adapter_name.downcase.include?("postgres")
+
     to_json_array = ->(v) { Array(v).to_json }
 
-    # 1. 完全一致（すべての指定条件を考慮）
+    apply_condition = lambda do |scope, column, value|
+      return scope unless value.present?
+
+      if is_postgres
+        scope.where("#{column} @> ?", to_json_array.call(value))
+      else
+        scope.where("JSON_SEARCH(#{column}, 'one', ?) IS NOT NULL", value)
+      end
+    end
+
+    # 1. 完全一致
     step1 = base_scope
-    step1 = step1.where("JSON_CONTAINS(pain_type, ?)", to_json_array.call(assessment.pain_types)) if assessment.pain_types.present?
-    step1 = step1.where("JSON_CONTAINS(duration, ?)", to_json_array.call(assessment.duration)) if assessment.duration.present?
-    step1 = step1.where("JSON_CONTAINS(job_type, ?)", to_json_array.call(assessment.job_types)) if assessment.job_types.present?
-    step1 = step1.where("JSON_CONTAINS(exercise_habit, ?)", to_json_array.call(assessment.exercise_habits)) if assessment.exercise_habits.present?
-    step1 = step1.where("JSON_CONTAINS(posture_habit, ?)", to_json_array.call(assessment.posture_habits)) if assessment.posture_habits.present?
+    step1 = apply_condition.call(step1, "pain_type", assessment.pain_types)
+    step1 = apply_condition.call(step1, "duration", assessment.duration)
+    step1 = apply_condition.call(step1, "job_type", assessment.job_types)
+    step1 = apply_condition.call(step1, "exercise_habit", assessment.exercise_habits)
+    step1 = apply_condition.call(step1, "posture_habit", assessment.posture_habits)
     return step1 if step1.exists?
 
     # 2. duration 無視
     step2 = base_scope
-    step2 = step2.where("JSON_CONTAINS(pain_type, ?)", to_json_array.call(assessment.pain_types)) if assessment.pain_types.present?
-    step2 = step2.where("JSON_CONTAINS(job_type, ?)", to_json_array.call(assessment.job_types)) if assessment.job_types.present?
-    step2 = step2.where("JSON_CONTAINS(exercise_habit, ?)", to_json_array.call(assessment.exercise_habits)) if assessment.exercise_habits.present?
-    step2 = step2.where("JSON_CONTAINS(posture_habit, ?)", to_json_array.call(assessment.posture_habits)) if assessment.posture_habits.present?
+    step2 = apply_condition.call(step2, "pain_type", assessment.pain_types)
+    step2 = apply_condition.call(step2, "job_type", assessment.job_types)
+    step2 = apply_condition.call(step2, "exercise_habit", assessment.exercise_habits)
+    step2 = apply_condition.call(step2, "posture_habit", assessment.posture_habits)
     return step2 if step2.exists?
 
     # 3. duration + exercise_habit 無視
     step3 = base_scope
-    step3 = step3.where("JSON_CONTAINS(pain_type, ?)", to_json_array.call(assessment.pain_types)) if assessment.pain_types.present?
-    step3 = step3.where("JSON_CONTAINS(job_type, ?)", to_json_array.call(assessment.job_types)) if assessment.job_types.present?
-    step3 = step3.where("JSON_CONTAINS(posture_habit, ?)", to_json_array.call(assessment.posture_habits)) if assessment.posture_habits.present?
+    step3 = apply_condition.call(step3, "pain_type", assessment.pain_types)
+    step3 = apply_condition.call(step3, "job_type", assessment.job_types)
+    step3 = apply_condition.call(step3, "posture_habit", assessment.posture_habits)
     return step3 if step3.exists?
 
     # 4. duration + job_type + exercise_habit 無視
     step4 = base_scope
-    step4 = step4.where("JSON_CONTAINS(pain_type, ?)", to_json_array.call(assessment.pain_types)) if assessment.pain_types.present?
-    step4 = step4.where("JSON_CONTAINS(posture_habit, ?)", to_json_array.call(assessment.posture_habits)) if assessment.posture_habits.present?
+    step4 = apply_condition.call(step4, "pain_type", assessment.pain_types)
+    step4 = apply_condition.call(step4, "posture_habit", assessment.posture_habits)
     return step4 if step4.exists?
 
     # 5. pain_type のみ
     fallback = base_scope
-    fallback = fallback.where("JSON_CONTAINS(pain_type, ?)", to_json_array.call(assessment.pain_types)) if assessment.pain_types.present?
+    fallback = apply_condition.call(fallback, "pain_type", assessment.pain_types)
     fallback
   end
 end
