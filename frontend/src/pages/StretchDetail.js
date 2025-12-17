@@ -76,10 +76,12 @@ const StretchDetail = () => {
         {stretch.video_url && (
           <div className="w-97 h-64 flex justify-center items-center bg-gray-100 rounded-md shadow-md overflow-hidden">
             <video
+              src={stretch.video_url}
               controls
-              className="object-cover w-full h-full"
+              playsInline
+              preload="metadata"
+              className="w-96 h-auto mx-auto my-4 rounded-md shadow-md"
             >
-              <source src={`${process.env.REACT_APP_API_BASE_URL}${stretch.video_url}`} type="video/mp4" />
               お使いのブラウザは動画再生に対応していません。
             </video>
           </div>

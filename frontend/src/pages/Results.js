@@ -164,10 +164,12 @@ const Results = () => {
                 {/* 動画を上に表示 */}
                 {mainStretch.video_url && (
                   <video
+                    src={mainStretch.video_url}
                     controls
+                    playsInline
+                    preload="metadata"
                     className="w-96 h-auto mx-auto my-4 rounded-md shadow-md"
                   >
-                    <source src={`${process.env.REACT_APP_API_BASE_URL}${mainStretch.video_url}`} type="video/mp4" />
                     お使いのブラウザは動画再生に対応していません。
                   </video>
                 )}
