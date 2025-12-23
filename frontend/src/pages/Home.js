@@ -16,13 +16,13 @@ const Home = () => {
           </p>
           {isAuthenticated ? (
             <div className="flex flex-col md:flex-row gap-4 justify-center">
-              <Link to="/assessment" className="btn btn-primary">診断を受ける</Link>
-              <Link to="/library" className="btn btn-outline">ストレッチライブラリ</Link>
+              <Link to="/assessment" className="btn btn-primary bg-blue-400 border border-black border-2">診断を受ける</Link>
+              <Link to="/library" className="btn btn-outline border border-black border-2">ストレッチライブラリ</Link>
             </div>
           ) : (
             <div className="flex flex-col md:flex-row gap-4 justify-center">
-              <Link to="/register" className="btn btn-primary">始める</Link>
-              <Link to="/login" className="btn btn-outline">ログイン</Link>
+              <Link to="/register" className="btn btn-primary bg-blue-400 border border-black border-2">始める</Link>
+              <Link to="/login" className="btn btn-outline border border-black border-2">ログイン</Link>
             </div>
           )}
         </div>

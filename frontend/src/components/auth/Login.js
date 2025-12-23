@@ -95,7 +95,7 @@ const Login = () => {
                 <div className="form-control mt-6">
                   <button
                     type="submit"
-                    className="btn btn-primary"
+                    className="btn border border-black border-2 btn-primary"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? 'ログイン中...' : 'ログイン'}
@@ -105,12 +105,11 @@ const Login = () => {
             )}
           </Formik>
 
-          {/* ✅ ゲストログインボタンを追加 */}
           <div className="divider">または</div>
 
           <button
             onClick={handleGuestLogin}
-            className="btn btn-outline btn-secondary"
+            className="btn btn-outline bg-[#F8C6BD] border-black border-2 btn-secondary"
             disabled={guestLoading}
           >
             {guestLoading ? 'ログイン中...' : 'ゲストとしてログイン'}

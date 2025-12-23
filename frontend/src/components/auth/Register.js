@@ -67,7 +67,7 @@ const Register = () => {
                   <Field
                     type="text"
                     name="name"
-                    className="input input-bordered w-full"
+                    className="input input-bordered border border-base-300 bg-base-100 focus:border-primary focus:outline-none w-full"
                   />
                   <ErrorMessage
                     name="name"
@@ -83,7 +83,7 @@ const Register = () => {
                   <Field
                     type="email"
                     name="email"
-                    className="input input-bordered w-full"
+                    className="input input-bordered border border-base-300 bg-base-100 focus:border-primary focus:outline-none w-full"
                   />
                   <ErrorMessage
                     name="email"
@@ -99,7 +99,7 @@ const Register = () => {
                   <Field
                     type="password"
                     name="password"
-                    className="input input-bordered w-full"
+                    className="input input-bordered border border-base-300 bg-base-100 focus:border-primary focus:outline-none w-full"
                   />
                   <ErrorMessage
                     name="password"
@@ -114,7 +114,7 @@ const Register = () => {
                   <Field
                     type="password"
                     name="password_confirmation"
-                    className="input input-bordered w-full"
+                    className="input input-bordered border border-base-300 bg-base-100 focus:border-primary focus:outline-none w-full"
                   />
                   <ErrorMessage
                     name="password_confirmation"
@@ -130,7 +130,7 @@ const Register = () => {
                   <Field
                     type="number"
                     name="age"
-                    className="input input-bordered w-full"
+                    className="input input-bordered border border-base-300 bg-base-100 focus:border-primary focus:outline-none w-full"
                   />
                   <ErrorMessage
                     name="age"
@@ -146,7 +146,7 @@ const Register = () => {
                   <Field
                     as="select"
                     name="gender"
-                    className="select select-bordered w-full"
+                    className="select select-bordered border border-base-300 bg-base-100 focus:border-base-400 focus:ring-0 focus:outline-none w-full"
                   >
                     <option value="">選択してください</option>
                     <option value="male">男性</option>
@@ -163,7 +163,7 @@ const Register = () => {
                 <div className="form-control mt-6">
                   <button
                     type="submit"
-                    className={`btn btn-primary w-full ${isSubmitting && 'loading'}`}
+                    className={`btn btn-primary border border-black border-2 w-full ${isSubmitting && 'loading'}`}
                     disabled={isSubmitting}
                   >
                     登録
