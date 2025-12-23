@@ -89,7 +89,12 @@ const Results = () => {
     try {
       setLoading(true);
       const response = await apiClient.get('/user_stretches/recommended');
-      console.log('APIから取得したrecommendedStretches:', response.data);
+
+      console.log(
+        'video_url一覧:',
+        response.data.map(s => s.video_url)
+      );
+
       setRecommendedStretches(response.data);
     } catch (error) {
       console.error('データ取得エラー:', error);
