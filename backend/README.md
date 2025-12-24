@@ -1,18 +1,23 @@
-# Backend API
+# Backend API（開発用）
 
-BodyCare+ アプリのバックエンドAPIです。身体状態の診断保存や、診断に基づいたストレッチ推奨APIを提供します。
+BodyCare+ アプリのバックエンド API（開発用）です。
+フロントエンド（bodycare+ / frontend）と組み合わせて、ローカル環境での動作確認を行うために使用します。
 
-Rails API + MySQL + JWT認証
+本番環境では、本APIは **BodyCare-plus-backend リポジトリ**として切り出され、Heroku にデプロイされています。
 
-## セットアップ
+## 技術スタック
+- Ruby on Rails（APIモード）
+- MySQL
+- JWT 認証
+- Cloudinary（動画管理）
+
+## 主な機能
+- ユーザー認証（JWT）
+- 身体状態診断の保存
+- 診断結果に基づくストレッチ推薦 API
+
+## セットアップ（ローカル）
 ```bash
 bundle install
 rails db:create db:migrate db:seed
-rails server -p 3001
-```
-
-## APIエンドポイント
-
-- `POST /api/v1/auth/login` - ログイン
-- `POST /api/v1/body_assessments` - 診断保存
-- `GET /api/v1/user_stretches/recommended` - おすすめ取得
+rails server -p 3000

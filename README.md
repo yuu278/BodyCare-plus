@@ -1,13 +1,15 @@
 # ストレッチアシスタント
 
 <p align="left">
-<img src="https://img.shields.io/badge/Rails-D30001?logo=rubyonrails&style=flat">
-<img src="https://img.shields.io/badge/React-555?logo=react&style=popout">
-<img src="https://img.shields.io/badge/TailwindCSS-38B2AC?logo=tailwind-css&style=flat">
-<img src="https://img.shields.io/badge/DaisyUI-5A0EF8?logo=daisyui&style=flat">
-<img src="https://img.shields.io/badge/MySQL-4479A1?logo=mysql&style=flat">
-<img src="https://img.shields.io/badge/Heroku-430098?logo=heroku&style=flat">
-<img src="https://img.shields.io/badge/Docker-555?logo=docker&style=popout">
+  <img src="https://img.shields.io/badge/Rails-D30001?logo=rubyonrails&style=flat">
+  <img src="https://img.shields.io/badge/React-555?logo=react&style=popout">
+  <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?logo=tailwind-css&style=flat">
+  <img src="https://img.shields.io/badge/DaisyUI-5A0EF8?logo=daisyui&style=flat">
+  <img src="https://img.shields.io/badge/MySQL-4479A1?logo=mysql&style=flat">
+  <img src="https://img.shields.io/badge/Heroku-430098?logo=heroku&style=flat">
+  <img src="https://img.shields.io/badge/Vercel-000000?logo=vercel&style=flat">
+  <img src="https://img.shields.io/badge/Cloudinary-3448C5?logo=cloudinary&style=flat">
+  <img src="https://img.shields.io/badge/Docker-555?logo=docker&style=popout">
 </p>
 
 ## サービス概要
@@ -15,7 +17,16 @@
 身体の悩みに基づいて、パーソナライズされたストレッチを提案するWebアプリケーションです。
 6つの簡単な質問に答えるだけで、あなたに最適なストレッチを動画付きで提案します。
 
-**本番環境**: https://bodycare-app-frontend.herokuapp.com
+本アプリは **フロントエンドとバックエンドを分離した構成**で開発しています。
+フロントエンドは Vercel、バックエンドは Heroku にデプロイし、API通信によって連携しています。
+
+## 本番環境
+
+- フロントエンド（Vercel）
+  https://bodycare-app-frontend.herokuapp.com
+
+- バックエンド（Rails API / Heroku）
+  ※ API専用のためブラウザからの直接アクセスは想定していません
 
 ## 主な機能一覧
 
@@ -53,12 +64,27 @@
 
 ## 技術スタック
 
-**フロントエンド**: React, React Router, Tailwind CSS, DaisyUI
-**バックエンド**: Ruby on Rails (API), JWT認証
-**データベース**: MySQL
-**インフラ**: Docker, Heroku
+### フロントエンド
+- React
+- React Router
+- Tailwind CSS
+- DaisyUI
+- デプロイ：Vercel
 
-## ローカル環境での起動
+### バックエンド
+- Ruby on Rails（APIモード）
+- JWT認証
+- デプロイ：Heroku
+- バックエンドリポジトリ
+  https://github.com/yuu278/BodyCare-plus-backend
+
+### データベース
+- MySQL
+
+### 開発環境
+- Docker / Docker Compose
+
+## ローカル環境での起動（フロント統合開発用）
 ```bash
 # リポジトリをクローン
 git clone https://github.com/yuu278/BodyCare-plus.git
@@ -74,6 +100,16 @@ docker compose exec back rails db:create db:migrate db:seed
 # フロントエンド: http://localhost:8000
 # バックエンド: http://localhost:3000
 ```
+※ 本番環境ではバックエンドは独立したリポジトリとして管理しています。
+## リポジトリ構成
+
+- bodycare+
+  フロントエンド（React）およびローカル統合開発用構成
+  https://github.com/yuu278/BodyCare-plus
+
+- BodyCare-plus-backend
+  バックエンド（Rails API）専用リポジトリ
+  https://github.com/yuu278/BodyCare-plus-backend
 
 ## 技術的な工夫
 
