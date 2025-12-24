@@ -23,7 +23,7 @@
 ## 本番環境
 
 - フロントエンド（Vercel）
-  https://bodycare-app-frontend.herokuapp.com
+  https://body-care-plus.vercel.app
 
 - バックエンド（Rails API / Heroku）
   ※ API専用のためブラウザからの直接アクセスは想定していません
