@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { login } from '../../services/auth';
+import { login, guestLogin } from '../../services/auth';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Login = () => {
   const [error, setError] = useState('');
+  const [guestLoading, setGuestLoading] = useState(false);
   const navigate = useNavigate();
   const { updateUser } = useAuth();
 
@@ -30,12 +31,26 @@ const Login = () => {
     }
   };
 
+  // ✅ ゲストログイン処理を追加
+  const handleGuestLogin = async () => {
+    try {
+      setGuestLoading(true);
+      setError('');
+      const data = await guestLogin();
+      updateUser(data.user);
+      navigate('/');
+    } catch (err) {
+      setError('ゲストログインに失敗しました。もう一度お試しください。');
+    } finally {
+      setGuestLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200">
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
           <h2 className="card-title justify-center mb-6">ログイン</h2>
-
           {error && <div className="alert alert-error">{error}</div>}
 
           <Formik
@@ -80,7 +95,7 @@ const Login = () => {
                 <div className="form-control mt-6">
                   <button
                     type="submit"
-                    className="btn btn-primary"
+                    className="btn border border-black border-2 btn-primary"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? 'ログイン中...' : 'ログイン'}
@@ -89,6 +104,16 @@ const Login = () => {
               </Form>
             )}
           </Formik>
+
+          <div className="divider">または</div>
+
+          <button
+            onClick={handleGuestLogin}
+            className="btn btn-outline bg-[#F8C6BD] border-black border-2 btn-secondary"
+            disabled={guestLoading}
+          >
+            {guestLoading ? 'ログイン中...' : 'ゲストとしてログイン'}
+          </button>
 
           <div className="text-center mt-4">
             <p>

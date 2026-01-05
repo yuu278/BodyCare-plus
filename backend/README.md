@@ -1,24 +1,23 @@
-# README
+# Backend API（開発用）
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+BodyCare+ アプリのバックエンド API（開発用）です。
+フロントエンド（bodycare+ / frontend）と組み合わせて、ローカル環境での動作確認を行うために使用します。
 
-Things you may want to cover:
+本番環境では、本APIは **BodyCare-plus-backend リポジトリ**として切り出され、Heroku にデプロイされています。
 
-* Ruby version
+## 技術スタック
+- Ruby on Rails（APIモード）
+- MySQL
+- JWT 認証
+- Cloudinary（動画管理）
 
-* System dependencies
+## 主な機能
+- ユーザー認証（JWT）
+- 身体状態診断の保存
+- 診断結果に基づくストレッチ推薦 API
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## セットアップ（ローカル）
+```bash
+bundle install
+rails db:create db:migrate db:seed
+rails server -p 3000

@@ -1,13 +1,12 @@
 class Api::V1::StretchesController < ApplicationController
+  skip_before_action :authenticate_user, only: [:index, :show]
+
   # 全ストレッチを取得
   def index
     stretches = Stretch.all
 
     # エリアでフィルタリング
     stretches = stretches.for_area(params[:area]) if params[:area].present?
-
-    # 難易度でフィルタリング
-    stretches = stretches.by_difficulty(params[:difficulty]) if params[:difficulty].present?
 
     render json: stretches
   end

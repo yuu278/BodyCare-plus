@@ -6,7 +6,6 @@ one:
   image_url: MyString
   video_url: MyString
   target_area: MyString
-  difficulty: 1
 
 two:
   name: MyString
@@ -14,4 +13,3 @@ two:
   image_url: MyString
   video_url: MyString
   target_area: MyString
-  difficulty: 1

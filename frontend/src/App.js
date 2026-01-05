@@ -9,6 +9,7 @@ import Assessment from './pages/Assessment';
 import Results from './pages/Results';
 import StretchLibrary from './pages/StretchLibrary';
 import Profile from './pages/Profile';
+import StretchDetail from './pages/StretchDetail';
 
 // 認証コンポーネント
 import Login from './components/auth/Login';
@@ -58,6 +59,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <Profile />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/stretches/:id"
+                element={
+                  <PrivateRoute>
+                    <StretchDetail />
                   </PrivateRoute>
                 }
               />

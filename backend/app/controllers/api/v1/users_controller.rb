@@ -1,14 +1,19 @@
 class Api::V1::UsersController < ApplicationController
   before_action :authenticate_user
-  before_action :set_user, only: [:show, :update, :destroy]
 
-  # 現在のユーザー情報を取得
+  # 現在のユーザー情報を返す専用エンドポイント
+  def me
+    render json: current_user.as_json(except: :password_digest)
+  end
+
+  # 既存の show は ID付きURL用
   def show
+    @user = User.find(params[:id])
     render json: @user.as_json(except: :password_digest)
   end
 
-  # ユーザー情報を更新
   def update
+    @user = current_user
     if @user.update(user_params)
       render json: @user
     else
@@ -17,10 +22,6 @@ class Api::V1::UsersController < ApplicationController
   end
 
   private
-
-  def set_user
-    @user = current_user
-  end
 
   def user_params
     params.require(:user).permit(:name, :age, :gender)
